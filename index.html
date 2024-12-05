@@ -1,56 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="style.css">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hackathon: Queues & Stacks</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hackathon Code Challenge</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <div id="app">
-    <header>
-      <h1>Hackathon: Queues & Stacks</h1>
-    </header>
-    <main>
-      <section id="problem-list">
-        <h2>Problems</h2>
-        <div>
-          <h3>Queues</h3>
-          <button onclick="selectProblem(1)">Queue: Enqueue and Dequeue</button>
-          <button onclick="selectProblem(2)">Queue: Reverse Order</button>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-8">
+        <!-- Título principal -->
+        <h1 class="text-3xl font-bold text-center mb-6">Hackathon Code Challenge</h1>
+
+        <!-- Lista de problemas -->
+        <div id="problems" class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Choose a Problem</h2>
+            <ul>
+                <li><button data-problem="1" class="problem-btn bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">Queue Problem 1</button></li>
+                <li><button data-problem="2" class="problem-btn bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">Queue Problem 2</button></li>
+                <li><button data-problem="3" class="problem-btn bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">Stack Problem 1</button></li>
+                <li><button data-problem="4" class="problem-btn bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">Stack Problem 2</button></li>
+            </ul>
         </div>
-        <div>
-          <h3>Stacks</h3>
-          <button onclick="selectProblem(3)">Stack: Push and Pop</button>
-          <button onclick="selectProblem(4)">Stack: Balanced Parentheses</button>
+
+        <!-- Formulario para solución -->
+        <div id="solution-form" class="hidden">
+            <h2 class="text-2xl font-bold mb-4" id="problem-title">Problem Title</h2>
+            <p id="problem-description" class="mb-4">Problem description goes here.</p>
+
+            <!-- Selección de lenguaje -->
+            <label for="language" class="block text-gray-700 text-sm font-bold mb-2">Select Language:</label>
+            <select id="language" class="shadow border rounded w-full py-2 px-3 text-gray-700 mb-4">
+                <option value="python3">Python 3</option>
+                <option value="java">Java</option>
+                <option value="cpp17">C++ 17</option>
+            </select>
+
+            <!-- Entrada de código -->
+            <label for="code" class="block text-gray-700 text-sm font-bold mb-2">Your Code:</label>
+            <textarea id="code" rows="10" class="shadow border rounded w-full py-2 px-3 text-gray-700 mb-4"></textarea>
+
+            <!-- Nombre del usuario -->
+            <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Your Name:</label>
+            <input type="text" id="username" placeholder="Enter your name" class="shadow border rounded w-full py-2 px-3 text-gray-700 mb-4">
+
+            <!-- Botón para enviar -->
+            <button id="submit-solution" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                Submit Solution
+            </button>
         </div>
-      </section>
-      <section id="editor">
-        <h2>Problem Details</h2>
-        <div id="problem-description"></div>
-        <label for="language-select">Choose a language:</label>
-        <select id="language-select">
-          <option value="javascript">JavaScript</option>
-          <option value="python">Python</option>
-          <option value="cpp">C++</option>
-          <option value="java">Java</option>
-        </select>
-        <textarea id="code-input" placeholder="Write your code here..."></textarea>
-        <button id="run-code">Run Code</button>
-        <pre id="output"></pre>
-      </section>
-    </main>
-    <footer>
-      <h2>Leaderboard</h2>
-      <table id="leaderboard">
-        <tr>
-          <th>Participant</th>
-          <th>Score</th>
-        </tr>
-        <!-- Rows dynamically generated -->
-      </table>
-    </footer>
-    <script src="app.js"></script>
-  </div>
+
+        <!-- Tabla de Ranking -->
+        <div id="ranking" class="mt-8">
+            <h2 class="text-2xl font-bold mb-4">Leaderboard</h2>
+            <table class="table-auto w-full border-collapse border border-gray-300">
+                <thead>
+                    <tr>
+                        <th class="border border-gray-300 px-4 py-2">Rank</th>
+                        <th class="border border-gray-300 px-4 py-2">Name</th>
+                        <th class="border border-gray-300 px-4 py-2">Problem</th>
+                        <th class="border border-gray-300 px-4 py-2">Language</th>
+                    </tr>
+                </thead>
+                <tbody id="ranking-list">
+                    <!-- Rankings dinámicos -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Script Principal -->
+    <script src="script.js"></script>
 </body>
 </html>
+
