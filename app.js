@@ -1,93 +1,84 @@
-const problems = [
-  {
-    id: 1,
-    title: "Queue: Enqueue and Dequeue",
-    description: "Implement a queue with enqueue and dequeue operations.",
-    input: "[1, 2, 3]",
-    expectedOutput: "[1, 2, 3]",
-  },
-  {
-    id: 2,
-    title: "Queue: Reverse Order",
-    description: "Use a queue to reverse the order of a list of numbers.",
-    input: "[4, 5, 6]",
-    expectedOutput: "[6, 5, 4]",
-  },
-  {
-    id: 3,
-    title: "Stack: Push and Pop",
-    description: "Implement a stack with push and pop operations.",
-    input: "[10, 20, 30]",
-    expectedOutput: "[30, 20, 10]",
-  },
-  {
-    id: 4,
-    title: "Stack: Balanced Parentheses",
-    description: "Check if a string of parentheses is balanced.",
-    input: "\"(())\"",
-    expectedOutput: "true",
-  },
-];
+const problems = {
+  1: { title: "Queue Problem 1", description: "Implement a queue using two stacks.", type: "queue" },
+  2: { title: "Queue Problem 2", description: "Reverse the order of elements in a queue.", type: "queue" },
+  3: { title: "Stack Problem 1", description: "Implement a stack using a single queue.", type: "stack" },
+  4: { title: "Stack Problem 2", description: "Check if an expression has balanced parentheses.", type: "stack" },
+};
 
-function selectProblem(id) {
-  const problem = problems.find((p) => p.id === id);
-  if (!problem) return;
+let selectedProblem = null;
+const rankingList = document.getElementById("ranking-list");
 
-  document.getElementById("problem-description").innerHTML = `
-    <h3>${problem.title}</h3>
-    <p>${problem.description}</p>
-    <p><strong>Input:</strong> ${problem.input}</p>
-    <p><strong>Expected Output:</strong> ${problem.expectedOutput}</p>
-  `;
-}
+// Mostrar el formulario cuando se selecciona un problema
+document.querySelectorAll(".problem-btn").forEach(button => {
+  button.addEventListener("click", (e) => {
+      const problemId = e.target.dataset.problem;
+      selectedProblem = problems[problemId];
+      document.getElementById("problem-title").innerText = selectedProblem.title;
+      document.getElementById("problem-description").innerText = selectedProblem.description;
+      document.getElementById("solution-form").classList.remove("hidden");
+  });
+});
 
-document.getElementById("run-code").addEventListener("click", async () => {
-  const problemTitleElement = document.querySelector("#problem-description h3");
+// Enviar solución
+document.getElementById("submit-solution").addEventListener("click", async () => {
+  const code = document.getElementById("code").value;
+  const username = document.getElementById("username").value;
+  const language = document.getElementById("language").value;
 
-  // Verifica si se seleccionó un problema
-  if (!problemTitleElement) {
-    alert("Please select a problem first!");
-    return;
+  if (!code || !username) {
+      alert("Please enter both your code and your name.");
+      return;
   }
 
-  const problem = problems.find((p) => p.title === problemTitleElement.textContent);
+  const clientId = "b35a6bc22535adfda5f6b1803c2d1e37";
+  const clientSecret = "e1c1d98d4371e750287bacb6655237a227c22c9ef3b6fc893957a3d4d817ae7e";
 
-  // Verifica si se encontró el problema
-  if (!problem) {
-    alert("Invalid problem selected!");
-    return;
-  }
-
-  const code = document.getElementById("code-input").value;
-  const language = document.getElementById("language-select").value;
-
-  if (!code) {
-    alert("Please write some code!");
-    return;
-  }
+  const requestData = {
+      script: code,
+      language: language,
+      versionIndex: "0", // Python 3, Java, or C++
+      clientId: clientId,
+      clientSecret: clientSecret,
+  };
 
   try {
-    // Llama a la API de Vercel
-    const response = await fetch("https://<tu-proyecto>.vercel.app/api/executeCode", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        code,
-        language,
-        versionIndex: "0", // Ajusta según la versión que quieras
-      }),
-    });
+      const response = await fetch("https://api.jdoodle.com/v1/execute", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(requestData),
+      });
+      const result = await response.json();
 
-    const result = await response.json();
-
-    // Verifica si la ejecución fue exitosa
-    if (response.ok) {
-      document.getElementById("output").textContent = result.output;
-    } else {
-      document.getElementById("output").textContent = `Error: ${result.error}`;
-    }
-  } catch (err) {
-    console.error("Error al conectar con la API:", err);
-    document.getElementById("output").textContent = "Error al ejecutar el código.";
+      if (response.ok && checkSolution(result.output)) {
+          addToRanking(username, selectedProblem.title, language);
+          alert("Congratulations! Your solution is correct.");
+      } else {
+          alert("Solution is incorrect. Please try again.");
+      }
+  } catch (error) {
+      console.error(error);
+      alert("An error occurred while executing your code.");
   }
 });
+
+// Verificar la salida para problemas específicos
+function checkSolution(output) {
+  if (selectedProblem.type === "queue") {
+      return output.includes("queue"); // Ejemplo de verificación básica
+  } else if (selectedProblem.type === "stack") {
+      return output.includes("stack");
+  }
+  return false;
+}
+
+// Agregar usuario al ranking
+function addToRanking(username, problem, language) {
+  const row = document.createElement("tr");
+  row.innerHTML = `
+      <td>${rankingList.children.length + 1}</td>
+      <td>${username}</td>
+      <td>${problem}</td>
+      <td>${language}</td>
+  `;
+  rankingList.appendChild(row);
+}
