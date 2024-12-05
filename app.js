@@ -30,6 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
         },
     ];
 
+    const clientId = "b35a6bc22535adfda5f6b1803c2d1e37";
+    const clientSecret = "e1c1d98d4371e750287bacb6655237a227c22c9ef3b6fc893957a3d4d817ae7e";
+
     const problemButtons = document.querySelectorAll(".problem-btn");
     const solutionForm = document.getElementById("solution-form");
     const problemTitle = document.getElementById("problem-title");
@@ -42,7 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
         button.addEventListener("click", event => {
             const problemId = parseInt(event.target.getAttribute("data-problem"));
             currentProblem = problems.find(p => p.id === problemId);
-
             if (currentProblem) {
                 problemTitle.innerText = currentProblem.title;
                 problemDescription.innerText = currentProblem.description;
@@ -51,32 +53,48 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    document.getElementById("submit-solution").addEventListener("click", () => {
+    document.getElementById("submit-solution").addEventListener("click", async () => {
         const code = document.getElementById("code").value;
         const username = document.getElementById("username").value;
         const language = document.getElementById("language").value;
 
-        if (!code || !username) {
-            alert("Please enter both your code and your name.");
+        if (!code || !username || !currentProblem) {
+            alert("Please ensure you selected a problem, entered your name, and provided a solution.");
             return;
         }
 
-        if (!currentProblem) {
-            alert("No problem selected.");
-            return;
-        }
+        const requestData = {
+            script: code,
+            language: language,
+            stdin: currentProblem.input,
+            versionIndex: "0",
+            clientId: clientId,
+            clientSecret: clientSecret,
+        };
 
         try {
-            const userOutput = eval(code)(JSON.parse(currentProblem.input));
-            if (JSON.stringify(userOutput) === currentProblem.expectedOutput) {
+            const response = await fetch("https://api.jdoodle.com/v1/execute", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(requestData),
+            });
+            const result = await response.json();
+
+            if (!result.output) {
+                alert("Error: No output returned from your code.");
+                return;
+            }
+
+            const userOutput = result.output.trim();
+            if (userOutput === currentProblem.expectedOutput) {
                 addToRanking(username, currentProblem.title, language);
                 alert("Congratulations! Your solution is correct.");
             } else {
-                alert(`Incorrect solution.\nExpected: ${currentProblem.expectedOutput}\nReceived: ${JSON.stringify(userOutput)}`);
+                alert(`Incorrect solution.\nExpected: ${currentProblem.expectedOutput}\nReceived: ${userOutput}`);
             }
         } catch (error) {
-            console.error("Error executing user code:", error);
-            alert("An error occurred while evaluating your solution. Please check your code.");
+            console.error("Error executing code:", error);
+            alert("An error occurred while executing your code. Please check your solution.");
         }
     });
 
