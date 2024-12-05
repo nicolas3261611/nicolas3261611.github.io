@@ -1,93 +1,129 @@
-const problems = [
-  {
-    id: 1,
-    title: "Queue: Enqueue and Dequeue",
-    description: "Implement a queue with enqueue and dequeue operations.",
-    input: "[1, 2, 3]",
-    expectedOutput: "[1, 2, 3]",
-  },
-  {
-    id: 2,
-    title: "Queue: Reverse Order",
-    description: "Use a queue to reverse the order of a list of numbers.",
-    input: "[4, 5, 6]",
-    expectedOutput: "[6, 5, 4]",
-  },
-  {
-    id: 3,
-    title: "Stack: Push and Pop",
-    description: "Implement a stack with push and pop operations.",
-    input: "[10, 20, 30]",
-    expectedOutput: "[30, 20, 10]",
-  },
-  {
-    id: 4,
-    title: "Stack: Balanced Parentheses",
-    description: "Check if a string of parentheses is balanced.",
-    input: "\"(())\"",
-    expectedOutput: "true",
-  },
-];
+const problems = {
+    1: {
+        title: "Queue Problem 1",
+        description: "Implement a queue using two stacks.",
+        type: "queue",
+        testCases: [
+            { input: "ENQUEUE 1\nENQUEUE 2\nDEQUEUE", expected: "1" },
+            { input: "ENQUEUE 3\nDEQUEUE\nENQUEUE 4\nDEQUEUE", expected: "3\n4" },
+        ],
+    },
+    2: {
+        title: "Queue Problem 2",
+        description: "Reverse the order of elements in a queue.",
+        type: "queue",
+        testCases: [
+            { input: "1 2 3 4\nREVERSE", expected: "4 3 2 1" },
+            { input: "10 20 30\nREVERSE", expected: "30 20 10" },
+        ],
+    },
+    3: {
+        title: "Stack Problem 1",
+        description: "Implement a stack using a single queue.",
+        type: "stack",
+        testCases: [
+            { input: "PUSH 5\nPUSH 10\nPOP\nPUSH 15\nPOP", expected: "10\n15" },
+            { input: "PUSH 7\nPOP\nPUSH 8\nPOP", expected: "7\n8" },
+        ],
+    },
+    4: {
+        title: "Stack Problem 2",
+        description: "Check if an expression has balanced parentheses.",
+        type: "stack",
+        testCases: [
+            { input: "({[]})", expected: "Balanced" },
+            { input: "({[})", expected: "Unbalanced" },
+        ],
+    },
+};
 
-function selectProblem(id) {
-  const problem = problems.find((p) => p.id === id);
-  if (!problem) return;
+// Verificar la salida para un problema
+function checkSolution(output, problemId) {
+    const problem = problems[problemId];
+    const testCases = problem.testCases;
 
-  document.getElementById("problem-description").innerHTML = `
-    <h3>${problem.title}</h3>
-    <p>${problem.description}</p>
-    <p><strong>Input:</strong> ${problem.input}</p>
-    <p><strong>Expected Output:</strong> ${problem.expectedOutput}</p>
-  `;
+    // Dividir la salida en líneas para comparación más precisa
+    const outputLines = output.trim().split("\n");
+
+    for (let i = 0; i < testCases.length; i++) {
+        const expectedOutput = testCases[i].expected.trim().split("\n");
+        if (outputLines.join("\n") !== expectedOutput.join("\n")) {
+            return false; // Si alguna salida no coincide
+        }
+    }
+
+    return true; // Todas las salidas coinciden
 }
 
-document.getElementById("run-code").addEventListener("click", async () => {
-  const problemTitleElement = document.querySelector("#problem-description h3");
+// Enviar solución
+document.getElementById("submit-solution").addEventListener("click", async () => {
+    const code = document.getElementById("code").value;
+    const username = document.getElementById("username").value;
+    const language = document.getElementById("language").value;
 
-  // Verifica si se seleccionó un problema
-  if (!problemTitleElement) {
-    alert("Please select a problem first!");
-    return;
-  }
-
-  const problem = problems.find((p) => p.title === problemTitleElement.textContent);
-
-  // Verifica si se encontró el problema
-  if (!problem) {
-    alert("Invalid problem selected!");
-    return;
-  }
-
-  const code = document.getElementById("code-input").value;
-  const language = document.getElementById("language-select").value;
-
-  if (!code) {
-    alert("Please write some code!");
-    return;
-  }
-
-  try {
-    // Llama a la API de Vercel
-    const response = await fetch("https://<tu-proyecto>.vercel.app/api/executeCode", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        code,
-        language,
-        versionIndex: "0", // Ajusta según la versión que quieras
-      }),
-    });
-
-    const result = await response.json();
-
-    // Verifica si la ejecución fue exitosa
-    if (response.ok) {
-      document.getElementById("output").textContent = result.output;
-    } else {
-      document.getElementById("output").textContent = `Error: ${result.error}`;
+    if (!code || !username) {
+        alert("Please enter both your code and your name.");
+        return;
     }
-  } catch (err) {
-    console.error("Error al conectar con la API:", err);
-    document.getElementById("output").textContent = "Error al ejecutar el código.";
-  }
+
+    const clientId = "b35a6bc22535adfda5f6b1803c2d1e37"; // Reemplaza con tus credenciales
+    const clientSecret = "e1c1d98d4371e750287bacb6655237a227c22c9ef3b6fc893957a3d4d817ae7e"; // Reemplaza con tus credenciales
+
+    const problemId = Object.keys(problems).find(
+        key => problems[key].title === document.getElementById("problem-title").innerText
+    );
+
+    const problem = problems[problemId];
+    const testCases = problem.testCases;
+
+    for (const testCase of testCases) {
+        const requestData = {
+            script: code,
+            language: language,
+            versionIndex: "0",
+            stdin: testCase.input,
+            clientId: clientId,
+            clientSecret: clientSecret,
+        };
+
+        try {
+            const response = await fetch("https://api.jdoodle.com/v1/execute", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(requestData),
+            });
+            const result = await response.json();
+
+            if (!result.output) {
+                alert("Error: No output returned from your code.");
+                return;
+            }
+
+            // Verificar la salida
+            if (!checkSolution(result.output, problemId)) {
+                alert("Solution is incorrect for one or more test cases.");
+                return;
+            }
+        } catch (error) {
+            console.error("Error executing code:", error);
+            alert("An error occurred while executing your code.");
+            return;
+        }
+    }
+
+    // Si todos los casos pasan, añadir al ranking
+    addToRanking(username, problem.title, language);
+    alert("Congratulations! All test cases passed.");
 });
+
+// Agregar al ranking
+function addToRanking(username, problem, language) {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+        <td>${rankingList.children.length + 1}</td>
+        <td>${username}</td>
+        <td>${problem}</td>
+        <td>${language}</td>
+    `;
+    rankingList.appendChild(row);
+}
