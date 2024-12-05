@@ -66,8 +66,8 @@ document.getElementById("submit-solution").addEventListener("click", async () =>
         return;
     }
 
-    const clientId = "YOUR_CLIENT_ID"; // Reemplaza con tus credenciales
-    const clientSecret = "YOUR_CLIENT_SECRET"; // Reemplaza con tus credenciales
+    const clientId = "b35a6bc22535adfda5f6b1803c2d1e37"; // Reemplaza con tus credenciales
+    const clientSecret = "e1c1d98d4371e750287bacb6655237a227c22c9ef3b6fc893957a3d4d817ae7e"; // Reemplaza con tus credenciales
 
     const problemId = Object.keys(problems).find(
         key => problems[key].title === document.getElementById("problem-title").innerText
