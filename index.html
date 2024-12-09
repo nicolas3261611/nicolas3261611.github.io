@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="style.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hackathon: Queues & Stacks</title>
@@ -17,25 +16,51 @@
         <h2>Problems</h2>
         <div>
           <h3>Queues</h3>
-          <button onclick="selectProblem(1)">Queue: Enqueue and Dequeue</button>
-          <button onclick="selectProblem(2)">Queue: Reverse Order</button>
+          <button data-problem="1">Queue: Enqueue and Dequeue</button>
+          <button data-problem="2">Queue: Reverse Order</button>
         </div>
         <div>
           <h3>Stacks</h3>
-          <button onclick="selectProblem(3)">Stack: Push and Pop</button>
-          <button onclick="selectProblem(4)">Stack: Balanced Parentheses</button>
+          <button data-problem="3">Stack: Push and Pop</button>
+          <button data-problem="4">Stack: Balanced Parentheses</button>
         </div>
       </section>
       <section id="editor">
-        <h2>Problem Details</h2>
-        <div id="problem-description"></div>
-        <label for="language-select">Choose a language:</label>
-        <select id="language-select">
-          <option value="javascript">JavaScript</option>
-          <option value="python">Python</option>
-          <option value="cpp">C++</option>
-          <option value="java">Java</option>
-        </select>
-        <textarea id="code-input" placeholder="Write your code here..."></textarea>
-        <button id="run-code">Run Code</button>
-        <pre id="output"></pre>
+        <h2 id="problem-title">Select a problem</h2>
+        <p id="problem-description">Details of the selected problem will appear here.</p>
+        <div id="solution-form" class="hidden">
+          <label for="username">Your Name:</label>
+          <input type="text" id="username" placeholder="Enter your name">
+
+          <label for="language-select">Choose a language:</label>
+          <select id="language-select">
+            <option value="python">Python</option>
+            <option value="javascript">JavaScript</option>
+            <option value="cpp">C++</option>
+          </select>
+
+          <textarea id="code-input" placeholder="Write your solution here..."></textarea>
+          <button id="submit-solution">Submit Solution</button>
+        </div>
+      </section>
+
+      <section id="ranking">
+        <h2>Ranking</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Problem</th>
+              <th>Language</th>
+            </tr>
+          </thead>
+          <tbody id="ranking-list"></tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
