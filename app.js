@@ -78,7 +78,7 @@ document.getElementById("submit-solution").addEventListener("click", async () =>
       : `❌ Incorrect Solution. Output:
 ${result.output}`;
   } catch (error) {
-    console.error(error);
+    console.error("Invalid response from server:", result);
     outputBox.textContent = "❌ Error communicating with the server.";
   }
 });
