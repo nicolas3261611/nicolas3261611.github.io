@@ -71,17 +71,25 @@ document.getElementById("submit-solution").addEventListener("click", async () =>
       body: JSON.stringify({ script: code, language: language, versionIndex: "0" }),
     });
 
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status} ${response.statusText}`);
+    }
+
     const result = await response.json();
+
+    // Validar la respuesta antes de usar result.output
+    if (!result || !result.output) {
+      throw new Error("Invalid response from server. 'output' is missing.");
+    }
+
     const isCorrect = checkSolution(result.output, selectedProblem.type);
     outputBox.textContent = isCorrect
       ? "🎉 Correct Solution!"
-      : `❌ Incorrect Solution. Output:
-${result.output}`;
+      : `❌ Incorrect Solution. Output:\n${result.output}`;
   } catch (error) {
-    console.error("Invalid response from server:", result);
-    outputBox.textContent = "❌ Error communicating with the server.";
+    console.error("Error:", error.message);
+    outputBox.textContent = `❌ Error: ${error.message}`;
   }
-});
 
 function checkSolution(output, type) {
   if (type === "queue") return output.includes("queue");
