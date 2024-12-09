@@ -14,14 +14,14 @@ document.querySelectorAll("button").forEach(button => {
     const problemId = e.target.dataset.problem;
     if (problems[problemId]) {
       selectedProblem = problems[problemId];
-      document.getElementById("problem-description").innerText = selectedProblem.description;
       document.getElementById("problem-title").innerText = selectedProblem.title;
+      document.getElementById("problem-description").innerText = selectedProblem.description;
       document.getElementById("solution-form").classList.remove("hidden");
     }
   });
 });
 
-// Enviar solución
+// Enviar solución usando CORS Anywhere
 document.getElementById("submit-solution").addEventListener("click", async () => {
   const code = document.getElementById("code-input").value;
   const username = document.getElementById("username").value;
@@ -32,7 +32,9 @@ document.getElementById("submit-solution").addEventListener("click", async () =>
     return;
   }
 
-  // Claves seguras desde entorno (usa variables en producción)
+  const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+  const apiUrl = "https://api.jdoodle.com/v1/execute";
+
   const clientId = "b35a6bc22535adfda5f6b1803c2d1e37";
   const clientSecret = "e1c1d98d4371e750287bacb6655237a227c22c9ef3b6fc893957a3d4d817ae7e";
 
@@ -45,7 +47,7 @@ document.getElementById("submit-solution").addEventListener("click", async () =>
   };
 
   try {
-    const response = await fetch("https://api.jdoodle.com/v1/execute", {
+    const response = await fetch(proxyUrl + apiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(requestData),
@@ -65,7 +67,7 @@ document.getElementById("submit-solution").addEventListener("click", async () =>
   }
 });
 
-// Verificar la salida (básica)
+// Verificar la salida
 function checkSolution(output) {
   if (selectedProblem.type === "queue") {
     return output.includes("queue");
@@ -86,3 +88,4 @@ function addToRanking(username, problem, language) {
   `;
   rankingList.appendChild(row);
 }
+
