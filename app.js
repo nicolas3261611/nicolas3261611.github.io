@@ -25,8 +25,23 @@ document.getElementById("submit-solution").addEventListener("click", async () =>
   const username = document.getElementById("username").value;
   const language = document.getElementById("language-select").value;
 
-  if (!code || !username || !selectedProblem) {
-    alert("Please fill all the fields and select a problem.");
+  if (!username.trim()) {
+  alert("Please enter your name.");
+  return;
+  }
+  
+  if (!language) {
+    alert("Please select a programming language.");
+    return;
+  }
+  
+  if (!selectedProblem) {
+    alert("Please select a problem from the list.");
+    return;
+  }
+  
+  if (!code.trim()) {
+    alert("Please write your solution code.");
     return;
   }
 
