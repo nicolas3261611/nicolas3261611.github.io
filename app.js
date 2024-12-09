@@ -91,8 +91,9 @@ document.getElementById("submit-solution").addEventListener("click", async () =>
     outputBox.textContent = `❌ Error: ${error.message}`;
   }
 
-function checkSolution(output, type) {
-  if (type === "queue") return output.includes("queue");
-  if (type === "stack") return output.includes("stack");
-  return false;
+  function checkSolution(output, type) {
+    if (type === "queue") return output.includes("queue");
+    if (type === "stack") return output.includes("stack");
+    return false;
+  }
 }
