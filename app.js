@@ -51,7 +51,7 @@ document.getElementById("submit-solution").addEventListener("click", async () =>
     return;
   }
 
-  const proxyUrl = "https://glitch.com/~emphasized-bony-reminder"; // Proxy creado en Glitch
+  const proxyUrl = "https://glitch.com/~emphasized-bony-reminder.me/execute"; // Proxy creado en Glitch
   const requestData = {
     script: code,
     language: language,
