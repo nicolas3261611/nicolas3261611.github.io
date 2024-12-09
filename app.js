@@ -8,65 +8,69 @@ const problems = {
 let selectedProblem = null;
 const rankingList = document.getElementById("ranking-list");
 
-// Mostrar el formulario cuando se selecciona un problema
-document.querySelectorAll(".problem-btn").forEach(button => {
+// Mostrar formulario cuando se selecciona un problema
+document.querySelectorAll("button").forEach(button => {
   button.addEventListener("click", (e) => {
-      const problemId = e.target.dataset.problem;
+    const problemId = e.target.dataset.problem;
+    if (problems[problemId]) {
       selectedProblem = problems[problemId];
-      document.getElementById("problem-title").innerText = selectedProblem.title;
       document.getElementById("problem-description").innerText = selectedProblem.description;
+      document.getElementById("problem-title").innerText = selectedProblem.title;
       document.getElementById("solution-form").classList.remove("hidden");
+    }
   });
 });
 
 // Enviar solución
 document.getElementById("submit-solution").addEventListener("click", async () => {
-  const code = document.getElementById("code").value;
+  const code = document.getElementById("code-input").value;
   const username = document.getElementById("username").value;
-  const language = document.getElementById("language").value;
+  const language = document.getElementById("language-select").value;
 
   if (!code || !username) {
-      alert("Please enter both your code and your name.");
-      return;
+    alert("Please enter both your code and your name.");
+    return;
   }
 
-  const clientId = "b35a6bc22535adfda5f6b1803c2d1e37";
-  const clientSecret = "e1c1d98d4371e750287bacb6655237a227c22c9ef3b6fc893957a3d4d817ae7e";
+  // Claves seguras desde entorno (usa variables en producción)
+  const clientId = "your_client_id";
+  const clientSecret = "your_client_secret";
 
   const requestData = {
-      script: code,
-      language: language,
-      versionIndex: "0", // Python 3, Java, or C++
-      clientId: clientId,
-      clientSecret: clientSecret,
+    script: code,
+    language: language,
+    versionIndex: "0",
+    clientId: clientId,
+    clientSecret: clientSecret,
   };
 
   try {
-      const response = await fetch("https://api.jdoodle.com/v1/execute", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(requestData),
-      });
-      const result = await response.json();
+    const response = await fetch("https://api.jdoodle.com/v1/execute", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestData),
+    });
 
-      if (response.ok && checkSolution(result.output)) {
-          addToRanking(username, selectedProblem.title, language);
-          alert("Congratulations! Your solution is correct.");
-      } else {
-          alert("Solution is incorrect. Please try again.");
-      }
+    const result = await response.json();
+
+    if (response.ok && checkSolution(result.output)) {
+      addToRanking(username, selectedProblem.title, language);
+      alert("Congratulations! Your solution is correct.");
+    } else {
+      alert("Solution is incorrect. Output:\n" + result.output);
+    }
   } catch (error) {
-      console.error(error);
-      alert("An error occurred while executing your code.");
+    console.error(error);
+    alert("An error occurred while executing your code.");
   }
 });
 
-// Verificar la salida para problemas específicos
+// Verificar la salida (básica)
 function checkSolution(output) {
   if (selectedProblem.type === "queue") {
-      return output.includes("queue"); // Ejemplo de verificación básica
+    return output.includes("queue");
   } else if (selectedProblem.type === "stack") {
-      return output.includes("stack");
+    return output.includes("stack");
   }
   return false;
 }
@@ -75,10 +79,10 @@ function checkSolution(output) {
 function addToRanking(username, problem, language) {
   const row = document.createElement("tr");
   row.innerHTML = `
-      <td>${rankingList.children.length + 1}</td>
-      <td>${username}</td>
-      <td>${problem}</td>
-      <td>${language}</td>
+    <td>${rankingList.children.length + 1}</td>
+    <td>${username}</td>
+    <td>${problem}</td>
+    <td>${language}</td>
   `;
   rankingList.appendChild(row);
 }
