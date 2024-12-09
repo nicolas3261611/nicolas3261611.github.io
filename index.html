@@ -28,35 +28,20 @@
       <section id="editor">
         <h2 id="problem-title">Select a problem</h2>
         <p id="problem-description">Details of the selected problem will appear here.</p>
-        <div id="solution-form" class="hidden">
-          <label for="username">Your Name:</label>
-          <input type="text" id="username" placeholder="Enter your name">
 
-          <label for="language-select">Choose a language:</label>
-          <select id="language-select">
-            <option value="python">Python</option>
-            <option value="javascript">JavaScript</option>
-            <option value="cpp">C++</option>
-          </select>
+        <label for="username">Your Name:</label>
+        <input type="text" id="username" placeholder="Enter your name">
 
-          <textarea id="code-input" placeholder="Write your solution here..."></textarea>
-          <button id="submit-solution">Submit Solution</button>
-        </div>
-      </section>
+        <label for="language-select">Choose a language:</label>
+        <select id="language-select">
+          <option value="python">Python</option>
+          <option value="javascript">JavaScript</option>
+          <option value="cpp">C++</option>
+        </select>
 
-      <section id="ranking">
-        <h2>Ranking</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Problem</th>
-              <th>Language</th>
-            </tr>
-          </thead>
-          <tbody id="ranking-list"></tbody>
-        </table>
+        <textarea id="code-input" placeholder="Write your solution here..."></textarea>
+        <button id="submit-solution">Submit Solution</button>
+        <pre id="output"></pre>
       </section>
     </main>
   </div>
