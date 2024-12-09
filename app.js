@@ -9,16 +9,33 @@ const problems = {
 let selectedProblem = null;
 const outputBox = document.getElementById("output");
 
-document.querySelectorAll("button").forEach(button => {
+document.querySelectorAll("button[data-problem]").forEach(button => {
   button.addEventListener("click", (e) => {
-    const problemId = e.target.dataset.problem;
+    const buttonElement = e.target.closest("button"); // Encuentra el botón más cercano
+    const problemId = buttonElement.dataset.problem;  // Captura el atributo data-problem
+
+    console.log("problemId:", problemId); // Depurar para verificar el valor
+
+    if (!problemId) {
+      alert("Error: No problem ID found!");
+      return;
+    }
+
     selectedProblem = problems[problemId];
+
+    if (!selectedProblem) {
+      alert(`Error: Problem with ID ${problemId} not found.`);
+      console.error(`Problem with ID ${problemId} not found in 'problems' object.`);
+      return;
+    }
+
     document.getElementById("problem-title").innerText = selectedProblem.title;
     document.getElementById("problem-description").innerText = selectedProblem.description;
     document.getElementById("solution-form").classList.remove("hidden");
     outputBox.textContent = "";
   });
 });
+
 
 document.getElementById("submit-solution").addEventListener("click", async () => {
   const code = document.getElementById("code-input").value;
