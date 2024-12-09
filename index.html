@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,27 +26,31 @@
           <button data-problem="4">Stack: Balanced Parentheses</button>
         </div>
       </section>
+
       <section id="editor">
         <h2 id="problem-title">Select a problem</h2>
         <p id="problem-description">Details of the selected problem will appear here.</p>
 
-        <label for="username">Your Name:</label>
-        <input type="text" id="username" placeholder="Enter your name">
+        <section id="solution-form" class="hidden">
+          <label for="username">Your Name:</label>
+          <input type="text" id="username" placeholder="Enter your name">
 
-        <label for="language-select">Choose a language:</label>
-        <select id="language-select">
-          <option value="python">Python</option>
-          <option value="javascript">JavaScript</option>
-          <option value="cpp">C++</option>
-        </select>
+          <label for="language-select">Choose a language:</label>
+          <select id="language-select">
+            <option value="python">Python</option>
+            <option value="javascript">JavaScript</option>
+            <option value="cpp">C++</option>
+          </select>
 
-        <textarea id="code-input" placeholder="Write your solution here..."></textarea>
-        <button id="submit-solution">Submit Solution</button>
+          <textarea id="code-input" placeholder="Write your solution here..."></textarea>
+          <button id="submit-solution">Submit Solution</button>
+        </section>
+
         <pre id="output"></pre>
       </section>
     </main>
   </div>
 
-  <script src="app.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
