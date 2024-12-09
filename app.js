@@ -1,4 +1,3 @@
-
 const problems = {
   1: { title: "Queue Problem 1", description: "Implement a queue using two stacks.", type: "queue" },
   2: { title: "Queue Problem 2", description: "Reverse the order of elements in a queue.", type: "queue" },
@@ -9,6 +8,7 @@ const problems = {
 let selectedProblem = null;
 const outputBox = document.getElementById("output");
 
+// Evento para seleccionar un problema
 document.querySelectorAll("button[data-problem]").forEach(button => {
   button.addEventListener("click", (e) => {
     const buttonElement = e.target.closest("button"); // Encuentra el botón más cercano
@@ -36,15 +36,15 @@ document.querySelectorAll("button[data-problem]").forEach(button => {
   });
 });
 
-
+// Evento para enviar la solución
 document.getElementById("submit-solution").addEventListener("click", async () => {
   const code = document.getElementById("code-input").value;
   const username = document.getElementById("username").value;
   const language = document.getElementById("language-select").value;
 
   if (!username.trim()) {
-  alert("Please enter your name.");
-  return;
+    alert("Please enter your name.");
+    return;
   }
   
   if (!language) {
@@ -90,10 +90,11 @@ document.getElementById("submit-solution").addEventListener("click", async () =>
     console.error("Error:", error.message);
     outputBox.textContent = `❌ Error: ${error.message}`;
   }
+});
 
-  function checkSolution(output, type) {
-    if (type === "queue") return output.includes("queue");
-    if (type === "stack") return output.includes("stack");
-    return false;
-  }
+// Función para verificar la solución
+function checkSolution(output, type) {
+  if (type === "queue") return output.includes("queue");
+  if (type === "stack") return output.includes("stack");
+  return false;
 }
